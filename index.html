@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WeatherGPT – Conversational AI for Weather Forecasting, Alerts, and Climate Information</title>
+  <meta name="description" content="Experience professional next-generation weather forecasting with WeatherGPT: live Doppler radar, 7-day outlooks, climate analytics, severe alerts, and real-time conversational AI weather intelligence.">
+  <meta name="keywords" content="Weather, Forecast, WeatherGPT, Weather AI, Live Radar, Hourly Forecast, Climate Trends, Weather Alerts">
+  <meta name="theme-color" content="#08111e">
+
+  <!-- OpenGraph / Social Sharing -->
+  <meta property="og:title" content="WeatherGPT – Conversational AI for Weather Forecasting">
+  <meta property="og:description" content="Real-time professional weather forecasting, dynamic atmospheric radar, and interactive AI weather intelligence.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       STICKY HEADER & NAVIGATION
+       ========================================================================== -->
+  <header class="site-header" id="site-header">
+    <div class="container header-container">
+      
+      <!-- Brand Logo Left -->
+      <a href="#" class="brand-link" data-view="home" id="brand-logo-btn" title="WeatherGPT Home">
+        <div class="brand-icon-wrap">
+          <span class="brand-cloud">☁️</span>
+        </div>
+        <span>WeatherGPT</span>
+        <span class="brand-badge">AI</span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="#home" class="nav-link active" data-view="home" id="nav-home">Home</a>
+        <a href="#forecast" class="nav-link" data-view="forecast" id="nav-forecast">Forecast</a>
+        <a href="#maps" class="nav-link" data-view="maps" id="nav-maps">Maps</a>
+        <a href="#alerts" class="nav-link" data-view="alerts" id="nav-alerts">Alerts</a>
+        <a href="#climate" class="nav-link" data-view="climate" id="nav-climate">Climate</a>
+        <a href="#weathergpt" class="nav-link nav-link-ai" data-view="weathergpt" id="nav-weathergpt-ai">
+          <span>✨</span> WeatherGPT AI
+        </a>
+      </nav>
+
+      <!-- Header Controls Right -->
+      <div class="header-right">
+        <!-- Location Pill -->
+        <div class="header-location-pill" id="header-location-indicator" title="Current Active City">
+          <span>📍</span>
+          <span id="nav-location-text">Lucknow, India</span>
+        </div>
+
+        <!-- °C / °F Unit Toggle -->
+        <button class="unit-toggle-btn" id="unit-toggle-btn" data-unit="C" title="Toggle Temperature Unit (°C / °F)">
+          °C / °F
+        </button>
+
+        <!-- Compact Search Box -->
+        <div class="header-search-wrap">
+          <span class="header-search-icon">🔍</span>
+          <input type="text" class="header-search-input" id="header-search-input" placeholder="Search city..." autocomplete="off">
+          <div class="search-dropdown" id="header-search-dropdown"></div>
+        </div>
+
+        <!-- User Profile Icon -->
+        <button class="header-profile-btn" id="header-profile-btn" title="User Account Settings">
+          👤
+        </button>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="mobile-hamburger-btn" id="mobile-hamburger-btn" aria-label="Open Navigation Menu">
+          ☰
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
+  <aside class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation Drawer">
+    <div class="mobile-drawer-header">
+      <div class="brand-link">
+        <div class="brand-icon-wrap"><span class="brand-cloud">☁️</span></div>
+        <span>WeatherGPT</span>
+      </div>
+      <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Close Navigation Menu">✕</button>
+    </div>
+    <nav class="mobile-nav-links">
+      <a href="#home" class="mobile-nav-link active" data-view="home">🏠 Home</a>
+      <a href="#forecast" class="mobile-nav-link" data-view="forecast">📅 Forecast</a>
+      <a href="#maps" class="mobile-nav-link" data-view="maps">🛰️ Radar Maps</a>
+      <a href="#alerts" class="mobile-nav-link" data-view="alerts">⚠️ Weather Alerts</a>
+      <a href="#climate" class="mobile-nav-link" data-view="climate">🌍 Climate Analytics</a>
+      <a href="#weathergpt" class="mobile-nav-link" data-view="weathergpt">🤖 WeatherGPT AI Assistant</a>
+    </nav>
+  </aside>
+
+  <!-- ==========================================================================
+       MAIN CONTENT VIEWS CONTAINER
+       ========================================================================== -->
+  <main class="main-content" id="main-content">
+    <div class="container">
+
+      <!-- ====================================================================
+           VIEW 1: HOME PAGE
+           ==================================================================== -->
+      <section class="view-section active" id="view-home">
+        
+        <!-- Search Section -->
+        <div class="hero-search-section">
+          <div class="hero-search-container">
+            <div class="hero-search-box">
+              <span class="hero-search-icon">🔍</span>
+              <input type="text" class="hero-search-input" id="hero-search-input" placeholder="Search city or location… (e.g. Lucknow, India)" autocomplete="off">
+              <div class="search-dropdown" id="hero-search-dropdown"></div>
+            </div>
+            <button class="hero-location-btn" id="hero-my-location-btn" title="Detect your location via GPS">
+              <span>🎯</span>
+              <span>Use My Location</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Weather Alerts Banner (if present for active city) -->
+        <div id="home-alerts-banner-wrap"></div>
+
+        <!-- Current Primary Weather Card -->
+        <div class="current-weather-hero" id="current-weather-hero-card">
+          <div class="hero-main-row">
+            <div class="hero-location-info">
+              <h1 class="hero-location-title" id="current-city-name">
+                <strong>Lucknow</strong>, <span>India</span>
+              </h1>
+              <div class="hero-temp-condition-wrap">
+                <div class="hero-temp-large" id="current-temp-val">28°C</div>
+                <div class="hero-condition-text" id="current-condition-text">Partly Cloudy</div>
+              </div>
+            </div>
+            <div class="hero-icon-container" id="current-weather-icon-slot">
+              <!-- Dynamically populated SVG weather icon -->
+            </div>
+          </div>
+
+          <!-- Quick Atmospheric Stats Grid -->
+          <div class="hero-stats-grid">
+            <div class="hero-stat-item">
+              <span class="hero-stat-label">Feels Like</span>
+              <span class="hero-stat-val" id="stat-feels-like">30°C</span>
+            </div>
+            <div class="hero-stat-item">
+              <span class="hero-stat-label">Humidity</span>
+              <span class="hero-stat-val" id="stat-humidity">65%</span>
+            </div>
+            <div class="hero-stat-item">
+              <span class="hero-stat-label">Wind</span>
+              <span class="hero-stat-val" id="stat-wind">12 km/h (ENE)</span>
+            </div>
+            <div class="hero-stat-item">
+              <span class="hero-stat-label">Visibility</span>
+              <span class="hero-stat-val" id="stat-visibility">8 km</span>
+            </div>
+            <div class="hero-stat-item">
+              <span class="hero-stat-label">Pressure</span>
+              <span class="hero-stat-val" id="stat-pressure">1012 hPa</span>
+            </div>
+            <div class="hero-stat-item">
+              <span class="hero-stat-label">UV Index</span>
+              <span class="hero-stat-val" id="stat-uv">6 (High)</span>
+            </div>
+          </div>
+
+          <!-- Hero Footer: Sunrise, Sunset, Last updated -->
+          <div class="hero-card-footer">
+            <div class="hero-sun-times">
+              <span>🌅 Sunrise: <strong id="stat-sunrise">05:52 AM</strong></span>
+              <span>🌇 Sunset: <strong id="stat-sunset">06:14 PM</strong></span>
+            </div>
+            <span id="current-last-updated">Updated: Just now</span>
+          </div>
+        </div>
+
+        <!-- Hourly Forecast Section (Horizontally Scrollable) -->
+        <div class="section-block" id="hourly-forecast-section">
+          <div class="section-head">
+            <h2 class="section-title">
+              <span>⏱️</span> Hourly Forecast
+            </h2>
+            <div class="hourly-controls">
+              <button class="scroll-arrow-btn" id="hourly-scroll-left" aria-label="Scroll hourly cards left">‹</button>
+              <button class="scroll-arrow-btn" id="hourly-scroll-right" aria-label="Scroll hourly cards right">›</button>
+            </div>
+          </div>
+          <div class="hourly-scroll-wrap" id="hourly-cards-container">
+            <!-- Dynamically populated hourly cards -->
+          </div>
+        </div>
+
+        <!-- 7-Day Forecast & Weather Details 2-Column Split Grid -->
+        <div class="home-split-grid">
+          <!-- Left: 7-Day Forecast -->
+          <div class="section-block" id="daily-forecast-section">
+            <div class="section-head">
+              <h2 class="section-title">
+                <span>📅</span> 7-Day Forecast
+              </h2>
+            </div>
+            <div class="daily-forecast-container" id="daily-forecast-container">
+              <!-- Dynamically populated daily rows -->
+            </div>
+          </div>
+
+          <!-- Right: 12 Weather Details Grid -->
+          <div class="section-block" id="weather-details-section">
+            <div class="section-head">
+              <h2 class="section-title">
+                <span>📊</span> Detailed Weather Conditions
+              </h2>
+            </div>
+            <div class="weather-details-grid" id="weather-details-grid">
+              <!-- Dynamically populated 12 cards -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Weather Radar Map Preview Section -->
+        <div class="section-block" id="map-preview-section">
+          <div class="section-head">
+            <h2 class="section-title">
+              <span>🛰️</span> Interactive Weather Radar & Atmospheric Map
+            </h2>
+            <button class="alert-banner-action-btn" onclick="App.switchView('maps')">
+              Expand Full Map →
+            </button>
+          </div>
+          
+          <div class="map-dashboard-card">
+            <div class="map-toolbar">
+              <div class="map-layer-selector">
+                <button class="map-layer-btn active" data-layer="radar">Doppler Radar</button>
+                <button class="map-layer-btn" data-layer="rain">Precipitation</button>
+                <button class="map-layer-btn" data-layer="wind">Wind Streamlines</button>
+                <button class="map-layer-btn" data-layer="temperature">Temperature</button>
+                <button class="map-layer-btn" data-layer="clouds">Clouds</button>
+              </div>
+              <div class="map-action-controls">
+                <button class="map-play-btn">⏸️ Pause</button>
+                <button class="map-zoom-btn map-zoom-in" title="Zoom in">+</button>
+                <button class="map-zoom-btn map-zoom-out" title="Zoom out">−</button>
+              </div>
+            </div>
+
+            <div class="map-canvas-container">
+              <canvas id="radar-canvas-home" class="radar-canvas"></canvas>
+              <div class="map-legend-overlay">
+                <span class="map-legend-title">Radar Intensity (dBZ)</span>
+                <div class="map-legend-gradient"></div>
+                <div class="map-legend-labels">
+                  <span>Light</span>
+                  <span>Moderate</span>
+                  <span>Severe</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="map-timeline-bar">
+              <span>Timeline:</span>
+              <input type="range" class="map-timeline-slider" min="-120" max="120" step="15" value="0">
+              <span class="map-timeline-label" id="map-timeline-label">Now (Live)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Features Section (What Makes WeatherGPT Different) -->
+        <div class="section-block" id="ai-features-section">
+          <div class="section-head">
+            <h2 class="section-title">
+              <span>🤖</span> Next-Gen AI Weather Intelligence
+            </h2>
+          </div>
+          <div class="ai-features-grid">
+            
+            <div class="ai-feature-card">
+              <span class="ai-feature-icon">💬</span>
+              <h3 class="ai-feature-title">Conversational Weather</h3>
+              <p class="ai-feature-desc">
+                Ask weather questions naturally like “What should I wear?” or “Will it rain this afternoon?” and receive immediate tailored advice.
+              </p>
+            </div>
+
+            <div class="ai-feature-card">
+              <span class="ai-feature-icon">📍</span>
+              <h3 class="ai-feature-title">Personalized Forecast</h3>
+              <p class="ai-feature-desc">
+                Get high-precision hyperlocal weather forecasts for any city or GPS coordinate globally with continuous live atmospheric models.
+              </p>
+            </div>
+
+            <div class="ai-feature-card">
+              <span class="ai-feature-icon">🌧️</span>
+              <h3 class="ai-feature-title">Rain Prediction</h3>
+              <p class="ai-feature-desc">
+                Understand exact rain probabilities, accumulation estimates, and pinpoint time windows before stepping outside.
+              </p>
+            </div>
+
+            <div class="ai-feature-card">
+              <span class="ai-feature-icon">⚠️</span>
+              <h3 class="ai-feature-title">Smart Alerts</h3>
+              <p class="ai-feature-desc">
+                Receive proactive severe alerts for heavy rainfall, thunderstorm squalls, extreme heatwaves, and air quality advisories.
+              </p>
+            </div>
+
+            <div class="ai-feature-card">
+              <span class="ai-feature-icon">📊</span>
+              <h3 class="ai-feature-title">Forecast Analysis</h3>
+              <p class="ai-feature-desc">
+                WeatherGPT translates complex meteorological metrics into actionable human guidance for outdoor events, commutes, and athletics.
+              </p>
+            </div>
+
+            <div class="ai-feature-card">
+              <span class="ai-feature-icon">🌍</span>
+              <h3 class="ai-feature-title">Climate Information</h3>
+              <p class="ai-feature-desc">
+                Explore long-term seasonal trends, 12-month climate averages, rainfall seasonality, and environmental patterns.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           VIEW 2: FORECAST PAGE
+           ==================================================================== -->
+      <section class="view-section" id="view-forecast">
+        <div class="page-header-banner">
+          <h1 id="forecast-view-city-title">Comprehensive Weather Forecast</h1>
+          <p>Multi-metric atmospheric trend analysis, hourly projections, and dynamic predictive graphs.</p>
+        </div>
+
+        <!-- Period Switcher Tabs -->
+        <div class="forecast-tabs-row">
+          <button class="forecast-tab-btn active" data-tab="today">Today</button>
+          <button class="forecast-tab-btn" data-tab="tomorrow">Tomorrow</button>
+          <button class="forecast-tab-btn" data-tab="week">7 Days</button>
+        </div>
+
+        <!-- Multi-Metric Interactive Charts Grid -->
+        <div class="charts-double-grid">
+          
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <span class="chart-card-title">🌡️ Temperature Trend</span>
+              <span class="hero-stat-label">Hourly Curve</span>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="forecast-temp-canvas"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <span class="chart-card-title">💧 Precipitation Probability</span>
+              <span class="hero-stat-label">Percentage (%)</span>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="forecast-precip-canvas"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <span class="chart-card-title">💨 Wind Speed & Gusts</span>
+              <span class="hero-stat-label">km/h</span>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="forecast-wind-canvas"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-head">
+              <span class="chart-card-title">🍃 Relative Humidity</span>
+              <span class="hero-stat-label">Percentage (%)</span>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="forecast-humidity-canvas"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Forecast Data Table -->
+        <div class="forecast-table-card">
+          <div class="section-head" style="padding: 1.25rem 1.5rem 0.5rem;">
+            <h3 class="section-title">📋 Detailed Meteorological Log</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="weather-data-table">
+              <thead>
+                <tr>
+                  <th>Time / Day</th>
+                  <th>Sky Condition</th>
+                  <th>Temperature</th>
+                  <th>Precipitation</th>
+                  <th>Wind Speed</th>
+                  <th>Humidity</th>
+                </tr>
+              </thead>
+              <tbody id="forecast-table-body">
+                <!-- Dynamically populated rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 3: MAPS PAGE
+           ==================================================================== -->
+      <section class="view-section" id="view-maps">
+        <div class="page-header-banner">
+          <h1>Live Weather Radar & Atmospheric Map</h1>
+          <p>High-resolution Doppler reflectivity, satellite cloud imagery, thermal contours, and wind particle vector simulations.</p>
+        </div>
+
+        <div class="map-dashboard-card" style="margin-bottom: 2rem;">
+          <div class="map-toolbar">
+            <div class="map-layer-selector">
+              <button class="map-layer-btn active" data-layer="radar">Doppler Radar</button>
+              <button class="map-layer-btn" data-layer="rain">Precipitation</button>
+              <button class="map-layer-btn" data-layer="wind">Wind Streamlines</button>
+              <button class="map-layer-btn" data-layer="temperature">Temperature</button>
+              <button class="map-layer-btn" data-layer="clouds">Clouds</button>
+            </div>
+            <div class="map-action-controls">
+              <button class="map-play-btn">⏸️ Pause</button>
+              <button class="map-zoom-btn map-zoom-in" title="Zoom in">+</button>
+              <button class="map-zoom-btn map-zoom-out" title="Zoom out">−</button>
+            </div>
+          </div>
+
+          <div class="map-canvas-container" style="height: 560px;">
+            <canvas id="radar-canvas-full" class="radar-canvas"></canvas>
+            <div class="map-legend-overlay">
+              <span class="map-legend-title">Reflectivity / Doppler dBZ</span>
+              <div class="map-legend-gradient"></div>
+              <div class="map-legend-labels">
+                <span>0 dBZ (Trace)</span>
+                <span>35 dBZ (Rain)</span>
+                <span>65+ dBZ (Storm)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-timeline-bar">
+            <span>Timeline:</span>
+            <input type="range" class="map-timeline-slider" min="-120" max="120" step="15" value="0">
+            <span class="map-timeline-label">Now (Live)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 4: ALERTS PAGE
+           ==================================================================== -->
+      <section class="view-section" id="view-alerts">
+        <div class="page-header-banner">
+          <h1>Weather Alerts & Emergency Advisories</h1>
+          <p>Official meteorological warnings, convective storm tracking, severe weather hazard assessments, and safety directives.</p>
+        </div>
+
+        <!-- Controls: Severity Filter & Notification Button -->
+        <div class="alerts-top-controls">
+          <div class="alert-filter-group">
+            <button class="alert-filter-btn active" data-filter="all">All Advisories</button>
+            <button class="alert-filter-btn" data-filter="severe">Severe</button>
+            <button class="alert-filter-btn" data-filter="moderate">Moderate</button>
+            <button class="alert-filter-btn" data-filter="minor">Minor</button>
+          </div>
+          <button class="alert-subscribe-btn" id="btn-subscribe-alerts">
+            🔔 Enable Push Alert Notifications
+          </button>
+        </div>
+
+        <!-- Alerts Feed -->
+        <div class="alerts-feed-container" id="alerts-feed-container">
+          <!-- Dynamically populated alert cards -->
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 5: CLIMATE INFORMATION PAGE
+           ==================================================================== -->
+      <section class="view-section" id="view-climate">
+        <div class="page-header-banner">
+          <h1 id="climate-city-heading">Long-Term Climate & Historical Statistics</h1>
+          <p>Annual temperature averages, seasonal rainfall distributions, and historical climate norms.</p>
+        </div>
+
+        <!-- Overview Quick Stats Bar -->
+        <div class="climate-stats-bar">
+          <div class="climate-stat-box">
+            <span class="climate-stat-label">Average Annual Temperature</span>
+            <span class="climate-stat-val" id="clim-stat-temp">25.6°C</span>
+          </div>
+          <div class="climate-stat-box">
+            <span class="climate-stat-label">Average Annual Rainfall</span>
+            <span class="climate-stat-val" id="clim-stat-rain">998 mm</span>
+          </div>
+          <div class="climate-stat-box">
+            <span class="climate-stat-label">Average Relative Humidity</span>
+            <span class="climate-stat-val" id="clim-stat-humidity">62%</span>
+          </div>
+        </div>
+
+        <!-- 12-Month Climate Monthly Chart -->
+        <div class="climate-chart-container">
+          <div class="section-head">
+            <h3 class="section-title">📊 12-Month Climate Profile (Temperatures & Rainfall)</h3>
+            <div style="font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 1rem;">
+              <span style="color: #f59e0b;">● Avg High (°C)</span>
+              <span style="color: #38bdf8;">● Avg Low (°C)</span>
+              <span style="color: #0284c7;">■ Rainfall (mm)</span>
+            </div>
+          </div>
+          <div class="climate-canvas-wrap">
+            <canvas id="climate-monthly-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- 4 Seasons Section -->
+        <div class="section-block">
+          <div class="section-head">
+            <h3 class="section-title">🌸 Seasonal Breakdown & Weather Patterns</h3>
+          </div>
+          <div class="climate-seasons-grid" id="climate-seasons-grid">
+            <!-- Dynamically populated seasonal cards -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       WEATHERGPT FLOATING ACTION BUTTON
+       ========================================================================== -->
+  <button class="weathergpt-floating-btn" id="weathergpt-floating-btn" title="Ask WeatherGPT AI Assistant">
+    <span class="fab-icon">☁️</span>
+    <span>Ask WeatherGPT</span>
+    <span class="fab-sparkle">✨</span>
+  </button>
+
+  <!-- ==========================================================================
+       WEATHERGPT CHAT PANEL MODAL / DRAWER
+       ========================================================================== -->
+  <div class="weathergpt-chat-panel" id="weathergpt-chat-panel" role="dialog" aria-label="WeatherGPT AI Chat" aria-hidden="true">
+    
+    <!-- Chat Header -->
+    <div class="chat-panel-header">
+      <div class="chat-header-title-group">
+        <div class="chat-header-avatar">☁️</div>
+        <div class="chat-header-text">
+          <h3>
+            WeatherGPT
+            <span class="chat-status-dot" title="Online"></span>
+          </h3>
+          <p>Your AI Weather Assistant • GPT Engine</p>
+        </div>
+      </div>
+      <div class="chat-header-controls">
+        <button class="chat-ctrl-btn" id="chat-voice-btn" title="Toggle Voice Readout (Text-to-Speech)">🔊</button>
+        <button class="chat-ctrl-btn" id="chat-clear-btn" title="Clear Conversation">🗑️</button>
+        <button class="chat-ctrl-btn" id="chat-expand-btn" title="Toggle Fullscreen Width">⛶</button>
+        <button class="chat-ctrl-btn" id="chat-close-btn" title="Close WeatherGPT">✕</button>
+      </div>
+    </div>
+
+    <!-- Chat Messages Stream -->
+    <div class="chat-messages-feed" id="chat-messages-feed">
+      <!-- Dynamically populated chat bubbles -->
+    </div>
+
+    <!-- Suggested Question Prompt Chips -->
+    <div class="chat-suggestions-wrap" id="chat-suggestion-chips">
+      <!-- Dynamically populated chips -->
+    </div>
+
+    <!-- Chat Input Form -->
+    <div class="chat-input-bar">
+      <form class="chat-input-form" id="chat-input-form">
+        <input type="text" class="chat-input-field" id="chat-input-field" placeholder="Ask about rain, clothes, travel, or alerts…" autocomplete="off">
+        <button type="submit" class="chat-send-btn" id="chat-send-btn" title="Send message">
+          ➤
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="app-toast" id="app-toast-notification"></div>
+
+  <!-- ==========================================================================
+       SITE FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        
+        <div class="footer-brand-col">
+          <div class="brand-link">
+            <div class="brand-icon-wrap"><span class="brand-cloud">☁️</span></div>
+            <span>WeatherGPT</span>
+            <span class="brand-badge">AI</span>
+          </div>
+          <p class="footer-brand-desc">
+            Next-generation commercial weather platform combining live meteorological forecasts, Doppler radar animation, severe alerts, and conversational AI weather intelligence.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="#home" onclick="App.switchView('home')">Home Dashboard</a></li>
+            <li><a href="#forecast" onclick="App.switchView('forecast')">Detailed Forecast</a></li>
+            <li><a href="#maps" onclick="App.switchView('maps')">Doppler Radar Maps</a></li>
+            <li><a href="#alerts" onclick="App.switchView('alerts')">Weather Alerts</a></li>
+            <li><a href="#climate" onclick="App.switchView('climate')">Climate Trends</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>AI Features</h4>
+          <ul>
+            <li><a href="#" onclick="WeatherGPT.openPanel(); WeatherGPT.sendMessage('Will it rain today?');">Rain Prediction AI</a></li>
+            <li><a href="#" onclick="WeatherGPT.openPanel(); WeatherGPT.sendMessage('What should I wear today?');">Clothing Advice</a></li>
+            <li><a href="#" onclick="WeatherGPT.openPanel(); WeatherGPT.sendMessage('Is it safe to travel tomorrow?');">Travel Risk Assessment</a></li>
+            <li><a href="#" onclick="WeatherGPT.openPanel(); WeatherGPT.sendMessage('Compare today\'s and tomorrow\'s weather');">Comparative Forecasts</a></li>
+            <li><a href="#" onclick="WeatherGPT.openPanel(); WeatherGPT.sendMessage('How is the air quality?');">Air Quality Advisor</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Data & Modeling</h4>
+          <ul>
+            <li><a href="#">Open-Meteo API Bridge</a></li>
+            <li><a href="#">Doppler Radar Reflectivity</a></li>
+            <li><a href="#">WMO Weather Standards</a></li>
+            <li><a href="#">Air Quality Standards (AQI)</a></li>
+            <li><a href="#">Privacy Policy & Terms</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 WeatherGPT. All rights reserved. Conversational AI for Weather Forecasting, Alerts, and Climate Information.</span>
+        <span>Built with HTML5, CSS3, Modern JavaScript & Open Atmospheric Data</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/weather-data.js"></script>
+  <script src="js/weather-icons.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/radar-map.js"></script>
+  <script src="js/weather-gpt.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
